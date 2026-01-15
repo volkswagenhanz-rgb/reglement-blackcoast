@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Règlement | BlackCoast Military</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d0d0d;
+            --bg-sidebar: #151515;
+            --bg-card: #1c1c1c;
+            --text: #e0e0e0;
+            --color-gen: #2ecc71;
+            --color-inf: #e74c3c;
+            --color-veh: #3498db;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: var(--text); margin: 0; display: flex; }
+
+        /* --- SIDEBAR --- */
+        nav { width: 300px; background-color: var(--bg-sidebar); height: 100vh; position: fixed; overflow-y: auto; border-right: 1px solid #333; z-index: 100; }
+        .logo-area { padding: 25px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #333; }
+        .logo-img { width: 45px; height: 45px; border-radius: 5px; object-fit: cover; background: #333; }
+
+        nav ul { list-style: none; padding: 0; margin: 0; }
+        .nav-item { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; border-left: 4px solid transparent; }
+        .nav-item:hover { background: #222; }
+        .nav-item.active { background: #222; border-left-color: var(--color-gen); }
+
+        .submenu { display: none; background: #111; list-style: none; padding: 0; }
+        .submenu li { padding: 12px 25px 12px 55px; font-size: 0.9rem; cursor: pointer; color: #aaa; transition: 0.2s; border-left: 2px solid transparent; }
+        .submenu li:hover { color: #fff; background: #1a1a1a; border-left-color: #555; }
+
+        /* --- CONTENT --- */
+        main { margin-left: 300px; width: 100%; min-height: 100vh; }
+        .page-header { padding: 40px 50px 10px 50px; }
+        .page-header h1 { font-size: 2.5rem; text-transform: uppercase; margin: 0; color: white; }
+        .content-padding { padding: 20px 50px; max-width: 1100px; }
+
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+
+        /* Layout Accueil */
+        .accueil-layout { display: flex; gap: 30px; align-items: flex-start; margin-top: 20px; }
+        .accueil-text { flex: 1.2; }
+        .accueil-banner { flex: 0.8; border-radius: 10px; overflow: hidden; border: 1px solid #444; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .accueil-banner img { width: 100%; display: block; }
+
+        .card { background: var(--bg-card); padding: 25px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid var(--color-gen); transition: 0.3s; }
+        .card:hover { transform: translateX(5px); }
+        .card h3 { margin-top: 0; color: #fff; font-size: 1.3rem; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
+
+        /* Couleurs dynamiques */
+        .page-inf .card { border-left-color: var(--color-inf); }
+        .page-veh .card { border-left-color: var(--color-veh); }
+
+        /* Couleurs de texte */
+        .vert { color: #2ecc71; font-weight: bold; }
+        .rouge { color: #e74c3c; font-weight: bold; }
+        .bleu { color: #3498db; font-weight: bold; }
+        .jaune { color: #f1c40f; font-weight: bold; }
+        .orange { color: #e67e22; font-weight: bold; }
+        .violet { color: #9b59b6; font-weight: bold; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 1000px) { .accueil-layout { flex-direction: column; } .accueil-banner { width: 100%; } }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo-area">
+        <img src="https://cdn.discordapp.com/attachments/1459852641130774652/1459852721522737194/BlackCoast_RP.png?ex=6969668b&is=6968150b&hm=0754ce45812a6b4ff9a9613323253b4ea3ed30380164598cd0cdae9c82217f20&" alt="Logo" class="logo-img">
+        <h2 style="color:white; margin:0; font-size:1.1rem; letter-spacing: 1px;">BLACKCOAST</h2>
+    </div>
+    <ul>
+        <li class="nav-item active" onclick="showPage('accueil')"><span><i class="fas fa-home"></i> Accueil</span></li>
+        <li class="nav-item" onclick="showPage('lexique')"><span><i class="fas fa-book"></i> Lexique</span></li>
+        <li class="nav-item" onclick="showPage('general')"><span><i class="fas fa-gavel"></i> Général</span></li>
+        <li class="nav-item" onclick="showPage('civils')"><span><i class="fas fa-users"></i> Civils</span></li>
+
+        <li class="nav-item" onclick="toggleSub('sub-inf')">
+            <span><i class="fas fa-person-rifle" style="color:var(--color-inf)"></i> L'Infanterie</span>
+            <i class="fas fa-chevron-down"></i>
+        </li>
+        <ul id="sub-inf" class="submenu">
+            <li onclick="showPage('inf-gen')">Général</li>
+            <li onclick="showPage('inf-lourd')">Soldats lourds</li>
+            <li onclick="showPage('inf-med')">Médecins</li>
+            <li onclick="showPage('inf-sniper')">Snipers</li>
+        </ul>
+
+        <li class="nav-item" onclick="toggleSub('sub-veh')">
+            <span><i class="fas fa-tank" style="color:var(--color-veh)"></i> Véhicules</span>
+            <i class="fas fa-chevron-down"></i>
+        </li>
+        <ul id="sub-veh" class="submenu">
+            <li onclick="showPage('veh-gen')">Général</li>
+            <li onclick="showPage('veh-air')">Avions / Hélicos</li>
+            <li onclick="showPage('veh-tank')">Tanks</li>
+            <li onclick="showPage('veh-trans')">Transports / Supports</li>
+            <li onclick="showPage('veh-aa')">Anti-aériens</li>
+        </ul>
+    </ul>
+</nav>
+
+<main>
+    <div class="page-header">
+        <h1 id="page-title">Accueil</h1>
+    </div>
+
+    <div class="content-padding">
+        
+        <section id="accueil" class="page active">
+            <div class="accueil-layout">
+                <div class="accueil-text">
+                    <div class="card">
+                        <h3>Message de Bienvenue</h3>
+                        <p>Bienvenue sur le règlement officiel du serveur <span class="vert">BlackCoast</span>.</p>
+                        <p>Prenez le temps de lire chaque section pour garantir une expérience de jeu optimale.</p>
+                    </div>
+                </div>
+                <div class="accueil-banner">
+                    <img src="https://cdn.discordapp.com/attachments/1411715664263249980/1461297054717313240/US_army.png?ex=696a0a6f&is=6968b8ef&hm=8d2379f8a70fffe6d06907032a9417ad7cd18d706ca0fa770e4268aa12817218&" alt="Bannière">
+                </div>
+            </div>
+        </section>
+
+        <section id="lexique" class="page">
+            <div class="card">
+                <h3>Métagaming</h3>
+                <p>Utiliser des informations <span class="violet">HRP</span> en jeu est interdit.</p>
+            </div>
+        </section>
+
+        <section id="general" class="page">
+            <div class="card">
+                <h3>Règles Globales</h3>
+                <p>Respectez les autres joueurs et le <span class="jaune">Staff</span> en toutes circonstances.</p>
+            </div>
+        </section>
+
+        <section id="civils" class="page">
+            <div class="card">
+                <h3>Règlement Civils</h3>
+                <p>Les civils ne doivent pas provoquer les forces armées sans raison RP valable.</p>
+            </div>
+        </section>
+
+        <section id="inf-gen" class="page page-inf">
+            <div class="card"><h3>Général Infanterie</h3><p>Modifiez ici la règle générale de l'infanterie.</p></div>
+        </section>
+        <section id="inf-lourd" class="page page-inf">
+            <div class="card"><h3>Soldats Lourds</h3><p>Modifiez ici la règle pour l'équipement lourd.</p></div>
+        </section>
+        <section id="inf-med" class="page page-inf">
+            <div class="card"><h3>Médecins</h3><p>Modifiez ici les règles de réanimation et de soins.</p></div>
+        </section>
+        <section id="inf-sniper" class="page page-inf">
+            <div class="card"><h3>Snipers</h3><p>Modifiez ici les distances de tir et règles d'engagement.</p></div>
+        </section>
+
+        <section id="veh-gen" class="page page-veh">
+            <div class="card"><h3>Général Véhicules</h3><p>Modifiez ici les règles de conduite et d'entretien.</p></div>
+        </section>
+        <section id="veh-air" class="page page-veh">
+            <div class="card"><h3>Avions / Hélicoptères</h3><p>Modifiez ici les règles de vol et de bombardement.</p></div>
+        </section>
+        <section id="veh-tank" class="page page-veh">
+            <div class="card"><h3>Tanks</h3><p>Modifiez ici les règles d'utilisation des blindés.</p></div>
+        </section>
+        <section id="veh-trans" class="page page-veh">
+            <div class="card"><h3>Transports</h3><p>Modifiez ici les règles pour les convois et le transport de troupes.</p></div>
+        </section>
+        <section id="veh-aa" class="page page-veh">
+            <div class="card"><h3>Anti-aériens</h3><p>Modifiez ici les cibles autorisées pour les AA.</p></div>
+        </section>
+
+    </div>
+</main>
+
+<script>
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        
+        // Mise à jour du titre
+        const titles = {
+            'accueil': 'Accueil', 'lexique': 'Lexique', 'general': 'Général', 'civils': 'Civils',
+            'inf-gen': 'Infanterie : Général', 'inf-lourd': 'Soldats Lourds', 'inf-med': 'Médecins', 'inf-sniper': 'Snipers',
+            'veh-gen': 'Véhicules : Général', 'veh-air': 'Aérien', 'veh-tank': 'Tanks', 'veh-trans': 'Transports', 'veh-aa': 'Anti-aériens'
+        };
+        document.getElementById('page-title').innerText = titles[pageId] || 'Règlement';
+        window.scrollTo(0,0);
+    }
+
+    function toggleSub(id) {
+        const sub = document.getElementById(id);
+        const allSubs = document.querySelectorAll('.submenu');
+        const isVisible = sub.style.display === 'block';
+        allSubs.forEach(s => s.style.display = 'none');
+        sub.style.display = isVisible ? 'none' : 'block';
+    }
+</script>
+
+</body>
+</html>
